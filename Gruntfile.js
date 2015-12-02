@@ -84,15 +84,7 @@ module.exports = function(grunt) {
                 }
             }
         },
-        copy: {
-            bundle_min_file: {
-                expand: true,
-                cwd: 'src/',
-                src: '*/dist/*.bundle.min.js',
-                dest: 'lib/',
-                flatten: true
-
-            },
+        copy: {           
             src_files:{
                 expand: true,
                 cwd: 'src/',
@@ -101,12 +93,8 @@ module.exports = function(grunt) {
                 flatten: true
             }
         },
-        concat: {
-            dist: {
-                src: ['lib/*.js'],
-                dest: 'dist/<%= pkg.name %>-<%= pkg.version %>.js',
-            },
-            raw_file :{
+        concat: {            
+            src_files :{
                 src: ['lib/raw/*.js'],
                 dest: 'dist/<%= pkg.name %>.bundle.js'
             }
@@ -128,8 +116,7 @@ module.exports = function(grunt) {
         }
 
     })    
-    grunt.registerTask('new',['clean','gitclone','copy:src_files','concat:raw_file','uglify']);
-    grunt.registerTask('build-core', ['clean','gitclone', 'copy:bundle_min_file', 'concat'])
+    grunt.registerTask('build',['clean','gitclone','copy:src_files','concat:src_files','uglify']);    
     grunt.registerTask('commit', ['gitadd', 'gitcommit:all', 'gitpush']);
     
 };
