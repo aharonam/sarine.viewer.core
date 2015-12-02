@@ -82,6 +82,13 @@ module.exports = function(grunt) {
                     branch: 'dev',
                     directory: 'src/vm'
                 }
+            },
+            ut: {
+                options: {
+                    repository: 'https://github.com/SarineTechnologies/sarine.viewer.utils.git',
+                    branch: 'dev',
+                    directory: 'src/ut'
+                }
             }
         },
         copy: {           
