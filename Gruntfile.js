@@ -7,7 +7,7 @@ module.exports = function(grunt) {
     dirname = dirname.pop();
     var branch = "dev"
     require('load-grunt-tasks')(grunt)
-    var files = ["Gruntfile.js", "copyright.txt",  "package.json", "dist/*.js", "commit.cmd"]
+    var files = ["Gruntfile.js", "copyright.txt",  "package.json", "dist/*.js", "commit.cmd","README.md"]
     var message = "commit"
     grunt.initConfig({
 
