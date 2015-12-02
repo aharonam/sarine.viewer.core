@@ -92,22 +92,43 @@ module.exports = function(grunt) {
                 dest: 'lib/',
                 flatten: true
 
+            },
+            src_files:{
+                expand: true,
+                cwd: 'src/',
+                src: ['*/dist/*.js','!*/dist/*{bundle,min}*.js' ],
+                dest: 'lib/raw',
+                flatten: true
             }
         },
         concat: {
             dist: {
                 src: ['lib/*.js'],
                 dest: 'dist/<%= pkg.name %>-<%= pkg.version %>.js',
+            },
+            raw_file :{
+                src: ['lib/raw/*.js'],
+                dest: 'dist/<%= pkg.name %>.bundle.js'
             }
         },
         clean: {
             build: {
                 src: ["src", "lib","dist"]
             }
+        },
+         uglify: {
+            options: {
+                preserveComments: 'some',
+                sourceMap : true                
+            },            
+            bundle: {
+                src: 'dist/<%= pkg.name %>.bundle.js',
+                dest: 'dist/<%= pkg.name %>.bundle.min.js'
+            }
         }
 
     })    
-    
+    grunt.registerTask('new',['clean','gitclone','copy:src_files','concat:raw_file','uglify']);
     grunt.registerTask('build-core', ['clean','gitclone', 'copy:bundle_min_file', 'concat'])
     grunt.registerTask('commit', ['gitadd', 'gitcommit:all', 'gitpush']);
     

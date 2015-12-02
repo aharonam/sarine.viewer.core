@@ -1,5 +1,5 @@
 {
-  "name": "sarine.core",
+  "name": "sarine.viewer.core",
   "version": "1.0.0",
   "description": "build core.bundle script",
   "main": "index.js",
