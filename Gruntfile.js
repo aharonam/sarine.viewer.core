@@ -10,7 +10,11 @@ module.exports = function(grunt) {
     var files = ["Gruntfile.js", "copyright.txt",  "package.json", "dist/*.*", "commit.cmd","README.md"]
     var message = "commit"
     grunt.initConfig({
-
+        version: {
+            project: {
+                src: ['bower.json', 'package.json']
+            }
+        },
         pkg: grunt.file.readJSON('package.json'),
         gitcheckout: {
             task: {
