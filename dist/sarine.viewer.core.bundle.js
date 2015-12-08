@@ -468,7 +468,7 @@ sarine.viewer.resource.manager - v0.8.0 -  Monday, September 7th, 2015, 4:32:07 
 }).call(this);
 
 /*
-sarine.viewer.utils - v1.7.0 -  Tuesday, September 8th, 2015, 3:45:22 PM 
+sarine.viewer.utils - v1.8.0 -  Tuesday, December 8th, 2015, 8:29:06 AM 
 */
 $(function() {
      if (typeof utilsManager !== 'undefined'){
@@ -501,38 +501,17 @@ $(function() {
 
 (function($) {
 $.reject = function(options) {
-	var opts = $.extend(true, {   
-		// Specifies which browsers/versions will be blocked
+	var opts = $.extend(true, {   		
 		reject : {
 			all: false, // Covers Everything (Nothing blocked)
-			msie: 6 // Covers MSIE <= 6 (Blocked by default)
-			/*
-			 * Many possible combinations.
-			 * You can specify browser (msie, chrome, firefox)
-			 * You can specify rendering engine (geko, trident)
-			 * You can specify OS (Win, Mac, Linux, Solaris, iPhone, iPad)
-			 *
-			 * You can specify versions of each.
-			 * Examples: msie9: true, firefox8: true,
-			 *
-			 * You can specify the highest number to reject.
-			 * Example: msie: 9 (9 and lower are rejected.
-			 *
-			 * There is also "unknown" that covers what isn't detected
-			 * Example: unknown: true
-			 */
+			msie: 6 // Covers MSIE <= 6 (Blocked by default)			
 		},
 		display: [], // What browsers to display and their order (default set below)
 		browserShow: true, // Should the browser options be shown?
 		browserInfo: { // Settings for which browsers to display
-			chrome: {
-				// Text below the icon
-				text: 'Google Chrome',
-				// URL For icon/text link
-				url: 'http://www.google.com/chrome/'
-				// (Optional) Use "allow" to customized when to show this option
-				// Example: to show chrome only for IE users
-				// allow: { all: false, msie: true }
+			chrome: {				
+				text: 'Google Chrome',// Text below the icon				
+				url: 'http://www.google.com/chrome/'// URL For icon/text link			
 			},
 			firefox: {
 				text: 'Mozilla Firefox',
@@ -561,70 +540,54 @@ $.reject = function(options) {
 
 		paragraph2: 'Just click on the icons to get to the download page',
 
-		// Allow closing of window
-		close: true,
+		
+		close: true,// Allow closing of window
 
-		// Message displayed below closing link
+		
 		closeMessage: 'By closing this window you acknowledge that your experience '+
 						'on this website may be degraded',
 		closeLink: 'Close This Window',
 		closeURL: '#',
 
-		// Allows closing of window with esc key
-		closeESC: true,
+		
+		closeESC: true,// Allows closing of window with esc key
 
-		// Use cookies to remmember if window was closed previously?
-		closeCookie: false,
-		// Cookie settings are only used if closeCookie is true
+		
+		closeCookie: false,// Use cookies to remmember if window was closed previously?		
 		cookieSettings: {
-			// Path for the cookie to be saved on
-			// Should be root domain in most cases
 			path: '/',
-			// Expiration Date (in seconds)
-			// 0 (default) means it ends with the current session
 			expires: 0
 		},
 
-		// Path where images are located
-		imagePath: './images/',
-		// Background color for overlay
-		overlayBgColor: '#000',
-		// Background transparency (0-1)
-		overlayOpacity: 0.8,
+		
+		imagePath: './images/',// Path where images are located
+		
+		overlayBgColor: '#000',// Background color for overlay
+		
+		overlayOpacity: 0.8,// Background transparency (0-1)
 
-		// Fade in time on open ('slow','medium','fast' or integer in ms)
-		fadeInTime: 'fast',
-		// Fade out time on close ('slow','medium','fast' or integer in ms)
-		fadeOutTime: 'fast',
-
-		// Google Analytics Link Tracking (Optional)
-		// Set to true to enable
-		// Note: Analytics tracking code must be added separately
-		analytics: false
+		
+		fadeInTime: 'fast',// Fade in time on open ('slow','medium','fast' or integer in ms)
+		
+		fadeOutTime: 'fast',// Fade out time on close ('slow','medium','fast' or integer in ms)	
+	
+		analytics: false// Google Analytics Link Tracking (Optional)
 	}, options);
 
 	// Set default browsers to display if not already defined
 	if (opts.display.length < 1) {
 		opts.display = [ 'chrome','firefox','safari','opera','msie' ];
 	}
-
-	// beforeRject: Customized Function
+	
 	if ($.isFunction(opts.beforeReject)) {
 		opts.beforeReject();
 	}
-
-	// Disable 'closeESC' if closing is disabled (mutually exclusive)
+	
 	if (!opts.close) {
 		opts.closeESC = false;
 	}
-
-	// This function parses the advanced browser options
-	var browserCheck = function(settings) {
-		// Check 1: Look for 'all' forced setting
-		// Check 2: Browser+major version (optional) (eg. 'firefox','msie','{msie: 6}')
-		// Check 3: Browser+major version (eg. 'firefox3','msie7','chrome4')
-		// Check 4: Rendering engine+version (eg. 'webkit', 'gecko', '{webkit: 537.36}')
-		// Check 5: Operating System (eg. 'win','mac','linux','solaris','iphone')
+	
+	var browserCheck = function(settings) {		
 		var layout = settings[$.layout.name],
 			browser = settings[$.browser.name];
 		return !!(settings['all']
@@ -634,9 +597,8 @@ $.reject = function(options) {
 			|| settings[$.os.name]);
 	};
 
-	// Determine if we need to display rejection for this browser, or exit
-	if (!browserCheck(opts.reject)) {
-		// onFail: Optional Callback
+	
+	if (!browserCheck(opts.reject)) {	
 		if ($.isFunction(opts.onFail)) {
 			opts.onFail();
 		}
@@ -644,48 +606,42 @@ $.reject = function(options) {
 		return false;
 	}
 
-	// If user can close and set to remmember close, initiate cookie functions
-	if (opts.close && opts.closeCookie) {
-		// Local global setting for the name of the cookie used
+	
+	if (opts.close && opts.closeCookie) {	
 		var COOKIE_NAME = 'jreject-close';
 
-		// Cookies Function: Handles creating/retrieving/deleting cookies
-		// Cookies are only used for opts.closeCookie parameter functionality
 		var _cookie = function(name, value) {
-			// Save cookie
+		
 			if (typeof value != 'undefined') {
 				var expires = '';
 
-				// Check if we need to set an expiration date
+		
 				if (opts.cookieSettings.expires !== 0) {
 					var date = new Date();
 					date.setTime(date.getTime()+(opts.cookieSettings.expires*1000));
 					expires = "; expires="+date.toGMTString();
 				}
-
-				// Get path from settings
+		
 				var path = opts.cookieSettings.path || '/';
-
-				// Set Cookie with parameters
+				
 				document.cookie = name+'='+
 					encodeURIComponent((!value) ? '' : value)+expires+
 					'; path='+path;
 
 				return true;
-			}
-			// Get cookie
+			}			
 			else {
 				var cookie,val = null;
 
 				if (document.cookie && document.cookie !== '') {
 					var cookies = document.cookie.split(';');
 
-					// Loop through all cookie values
+			
 					var clen = cookies.length;
 					for (var i = 0; i < clen; ++i) {
 						cookie = $.trim(cookies[i]);
 
-						// Does this cookie string begin with the name we want?
+			
 						if (cookie.substring(0,name.length+1) == (name+'=')) {
 							var len = name.length;
 							val = decodeURIComponent(cookie.substring(len+1));
@@ -694,20 +650,16 @@ $.reject = function(options) {
 					}
 				}
 
-				// Returns cookie value
+				
 				return val;
 			}
 		};
-
-		// If cookie is set, return false and don't display rejection
+		
 		if (_cookie(COOKIE_NAME)) {
 			return false;
 		}
 	}
-
-	// Load background overlay (jr_overlay) + Main wrapper (jr_wrap) +
-	// Inner Wrapper (jr_inner) w/ opts.header (jr_header) +
-	// opts.paragraph1/opts.paragraph2 if set
+	
 	var html = '<div id="jr_overlay"></div><div id="jr_wrap"><div id="jr_inner">'+
 		'<h1 id="jr_header">'+opts.header+'</h1>'+
 		(opts.paragraph1 === '' ? '' : '<p>'+opts.paragraph1+'</p>')+
@@ -717,21 +669,17 @@ $.reject = function(options) {
 	if (opts.browserShow) {
 		html += '<ul>';
 
-		// Generate the browsers to display
+		
 		for (var x in opts.display) {
 			var browser = opts.display[x]; // Current Browser
 			var info = opts.browserInfo[browser] || false; // Browser Information
-
-			// If no info exists for this browser
-			// or if this browser is not suppose to display to this user
-			// based on "allow" flag
+		
 			if (!info || (info['allow'] != undefined && !browserCheck(info['allow']))) {
 				continue;
 			}
 
 			var url = info.url || '#'; // URL to link text/icon to
-
-			// Generate HTML for this browser option
+			
 			html += '<li id="jr_'+browser+'"><div class="jr_icon"></div>'+
 					'<div><a href="'+url+'">'+(info.text || 'Unknown')+'</a>'+
 					'</div></li>';
@@ -742,50 +690,48 @@ $.reject = function(options) {
 		html += '</ul>';
 	}
 
-	// Close list and #jr_list
+	
 	html += '<div id="jr_close">'+
-	// Display close links/message if set
+	
 	(opts.close ? '<a href="'+opts.closeURL+'">'+opts.closeLink+'</a>'+
 		'<p>'+opts.closeMessage+'</p>' : '')+'</div>'+
-	// Close #jr_inner and #jr_wrap
+	
 	'</div></div>';
 
 	var element = $('<div>'+html+'</div>'); // Create element
 	var size = _pageSize(); // Get page size
 	var scroll = _scrollSize(); // Get page scroll
 
-	// This function handles closing this reject window
-	// When clicked, fadeOut and remove all elements
+	
 	element.bind('closejr', function() {
-		// Make sure the permission to close is granted
+		
 		if (!opts.close) {
 			return false;
 		}
 
-		// Customized Function
+		
 		if ($.isFunction(opts.beforeClose)) {
 			opts.beforeClose();
 		}
 
-		// Remove binding function so it
-		// doesn't get called more than once
+		
 		$(this).unbind('closejr');
 
-		// Fade out background and modal wrapper
+		
 		$('#jr_overlay,#jr_wrap').fadeOut(opts.fadeOutTime,function() {
 			$(this).remove(); // Remove element from DOM
 
-			// afterClose: Customized Function
+			
 			if ($.isFunction(opts.afterClose)) {
 				opts.afterClose();
 			}
 		});
 
-		// Show elements that were hidden for layering issues
+		
 		var elmhide = 'embed.jr_hidden, object.jr_hidden, select.jr_hidden, applet.jr_hidden';
 		$(elmhide).show().removeClass('jr_hidden');
 
-		// Set close cookie for next run
+		
 		if (opts.closeCookie) {
 			_cookie(COOKIE_NAME, 'true');
 		}
@@ -793,20 +739,18 @@ $.reject = function(options) {
 		return true;
 	});
 
-	// Tracks clicks in Google Analytics (category 'External Links')
-	// only if opts.analytics is enabled
+	
 	var analytics = function(url) {
 		if (!opts.analytics) {
 			return false;
 		}
 
-		// Get just the hostname
+		
 		var host = url.split(/\/+/g)[1];
 
-		// Send external link event to Google Analaytics
-		// Attempts both versions of analytics code. (Newest first)
+		
 		try {
-			// Newest analytics code
+			
 			ga('send', 'event', 'External', 'Click', host, url);
 		} catch (e) {
 			try {
@@ -815,25 +759,18 @@ $.reject = function(options) {
 		}
 	};
 
-	// Called onClick for browser links (and icons)
-	// Opens link in new window
+	
 	var openBrowserLinks = function(url) {
-		// Send link to analytics if enabled
+		
 		analytics(url);
 
-		// Open window, generate random id value
+	
 		window.open(url, 'jr_'+ Math.round(Math.random()*11));
 
 		return false;
 	};
 
-	/*
-	 * Trverse through element DOM and apply JS variables
-	 * All CSS elements that do not require JS will be in
-	 * css/jquery.jreject.css
-	 */
-
-	// Creates 'background' (div)
+	
 	element.find('#jr_overlay').css({
 		width: size[0],
 		height: size[1],
@@ -841,17 +778,17 @@ $.reject = function(options) {
 		opacity: opts.overlayOpacity
 	});
 
-	// Wrapper for our pop-up (div)
+	
 	element.find('#jr_wrap').css({
 		top: scroll[1]+(size[3]/4),
 		left: scroll[0]
 	});
 
-	// Wrapper for inner centered content (div)
+	
 	element.find('#jr_inner').css({
 		minWidth: displayNum*100,
 		maxWidth: displayNum*140,
-		// min/maxWidth not supported by IE
+		
 		width: $.layout.name == 'trident' ? displayNum*155 : 'auto'
 	});
 
@@ -861,13 +798,13 @@ $.reject = function(options) {
 	});
 
 	element.find('#jr_inner li .jr_icon').each(function() {
-		// Dynamically sets the icon background image
+		
 		var self = $(this);
 		self.css('background','transparent url('+opts.imagePath+'browser_'+
 				(self.parent('li').attr('id').replace(/jr_/,''))+'.gif)'+
 					' no-repeat scroll left top');
 
-		// Send link clicks to openBrowserLinks
+		
 		self.click(function () {
 			var url = $(this).next('div').children('a').attr('href');
 			openBrowserLinks(url);
@@ -879,35 +816,34 @@ $.reject = function(options) {
 		return false;
 	});
 
-	// Bind closing event to trigger closejr
-	// to be consistant with ESC key close function
+	
 	element.find('#jr_close a').click(function() {
 		$(this).trigger('closejr');
 
-		// If plain anchor is set, return false so there is no page jump
+		
 		if (opts.closeURL === '#') {
 			return false;
 		}
 	});
 
-	// Set focus (fixes ESC key issues with forms and other focus bugs)
+	
 	$('#jr_overlay').focus();
 
-	// Hide elements that won't display properly
+	
 	$('embed, object, select, applet').each(function() {
 		if ($(this).is(':visible')) {
 			$(this).hide().addClass('jr_hidden');
 		}
 	});
 
-	// Append element to body of document to display
+	
 	$('body').append(element.hide().fadeIn(opts.fadeInTime));
 
-	// Handle window resize/scroll events and update overlay dimensions
+	
 	$(window).bind('resize scroll',function() {
 		var size = _pageSize(); // Get size
 
-		// Update overlay dimensions based on page size
+		
 		$('#jr_overlay').css({
 			width: size[0],
 			height: size[1]
@@ -915,14 +851,14 @@ $.reject = function(options) {
 
 		var scroll = _scrollSize(); // Get page scroll
 
-		// Update modal position based on scroll
+		
 		$('#jr_wrap').css({
 			top: scroll[1] + (size[3]/4),
 			left: scroll[0]
 		});
 	});
 
-	// Add optional ESC Key functionality
+	
 	if (opts.closeESC) {
 		$(document).bind('keydown',function(event) {
 			// ESC = Keycode 27
@@ -932,7 +868,7 @@ $.reject = function(options) {
 		});
 	}
 
-	// afterReject: Customized Function
+	
 	if ($.isFunction(opts.afterReject)) {
 		opts.afterReject();
 	}
@@ -940,8 +876,7 @@ $.reject = function(options) {
 	return true;
 };
 
-// Based on compatibility data from quirksmode.com
-// This is used to help calculate exact center of the page
+
 var _pageSize = function() {
 	var xScroll = window.innerWidth && window.scrollMaxX ?
 				window.innerWidth + window.scrollMaxX :
@@ -969,15 +904,15 @@ var _pageSize = function() {
 };
 
 
-// Based on compatibility data from quirksmode.com
+
 var _scrollSize = function() {
 	return [
-		// scrollSize X
+		
 		window.pageXOffset ? window.pageXOffset : (document.documentElement &&
 				document.documentElement.scrollTop ?
 				document.documentElement.scrollLeft : document.body.scrollLeft),
 
-		// scrollSize Y
+		
 		window.pageYOffset ? window.pageYOffset : (document.documentElement &&
 				document.documentElement.scrollTop ?
 				document.documentElement.scrollTop : document.body.scrollTop)
@@ -985,16 +920,6 @@ var _scrollSize = function() {
 };
 })(jQuery);
 
-/*
- * jQuery Browser Plugin
- * Version 2.4 / jReject 1.0.x
- * URL: http://jquery.thewikies.com/browser
- * Description: jQuery Browser Plugin extends browser detection capabilities and
- * can assign browser selectors to CSS classes.
- * Author: Nate Cavanaugh, Minhchau Dang, Jonathan Neal, & Gregory Waxman
- * Updated By: Steven Bower for use with jReject plugin
- * Copyright: Copyright (c) 2008 Jonathan Neal under dual MIT/GPL license.
- */
 
 (function ($) {
 	$.browserTest = function (a, z) {
@@ -1085,6 +1010,204 @@ var _scrollSize = function() {
 
 	$.browserTest(navigator.userAgent);
 }(jQuery));
+if (window.performance == undefined || window.performance.now == undefined) {
+    window.performance = {}
+    window.performance.now = (function() {
+        return performance.now ||
+            performance.mozNow ||
+            performance.msNow ||
+            performance.oNow ||
+            performance.webkitNow ||
+            function() {
+                return new Date().getTime();
+            };
+    })();
+}
+  
+
+if (window.performance.mark == undefined) {
+    window.performance._marks = []
+
+    window.performance.mark = function(mark_name, duration) {
+        duration = duration || 0
+        window.performance._marks.push({
+            mark: mark_name,
+            startTime: window.performance.now() - document.initTime,
+            duration: duration
+        })
+    }
+
+    window.performance.getEntriesByName = function(name) {
+        return window.performance._marks.filter(function(mark) {
+            return mark.mark == name;
+        })
+    }
+
+    window.performance.clearMarks = function() {}
+    window.performance.clearMeasures = function() {}
+
+    window.performance.measure = function(new_mark, start_mark_name, end_mark_name) {
+        if (typeof window.performance.getEntriesByName === 'undefined')
+            return;
+
+        var start_mark = window.performance.getEntriesByName(start_mark_name)[0]
+        var end_mark = window.performance.getEntriesByName(end_mark_name)[0]
+        if (typeof window.performance.mark !== 'undefined') {
+            if (typeof start_mark !== 'undefined' && typeof end_mark !== 'undefined')
+                window.performance.mark(new_mark, end_mark.startTime - start_mark.startTime)
+            else
+                window.performance.mark(new_mark, new Date().getTime() - new Date().getTime())
+        }
+
+    }
+
+}   
+
+
+
+document.initTime = performance.now();
+window.performance.mark("mark_start");
+
+var startTime = Date.now();
+
+var performanceManager = (function(isDebugMode) {
+    var firstInit = false, fullInit = false;
+
+    if (isDebugMode) $("#debug_log").show()
+    else $("#debug_log").hide();
+
+    function formatTime(totalTime) {
+        if (typeof totalTime !== 'undefined' && totalTime !== null)
+            return (totalTime / 1000).toFixed(3) + "s";
+    }
+
+    function calcAndWriteToLog(id) {
+        $('#' + id + '>.value').html(formatTime(calcTime(id)))
+    }
+
+    function measure(id,start,end) {
+        if (typeof window.performance.measure !== 'undefined')
+            window.performance.measure(id,start,end);  
+    }
+
+    function mark(eventName) {
+        if (typeof window.performance.mark !== 'undefined')
+            window.performance.mark(eventName);
+    }
+    function newRelic(measure){
+        if(typeof measure === 'undefined')
+            return;
+        var nr = typeof(newrelic) != 'undefined' ? newrelic : {
+                addToTrace: function(obj) {
+                    console.log(obj)
+                },
+                setCustomAttribute: function(name, value) {
+                    console.log({
+                        name: name,
+                        value: value
+                    })
+                }
+            },
+            now = Date.now();
+        if(measure.name.indexOf("first_init") != -1 && !firstInit && window.performance){
+            firstInit = true;
+            window.performance.measure('first_init','mark_start',measure.name + '_end');
+            var m = window.performance.getEntriesByName('first_init')[0]
+            nr.setCustomAttribute('first_init',m.duration + m.startTime); 
+        }
+        nr.addToTrace({
+                name : measure.name, 
+                start : startTime,
+                end : startTime + measure.startTime + measure.duration,
+                origin : location.origin,
+                type : measure.name.split("_").slice(2).join("-")
+                
+            })
+        nr.setCustomAttribute(measure.name.split("_").slice(2).join("-"), measure.duration)
+        return measure;
+    }
+    function calcTime(eventName) {
+        if (typeof window.performance.getEntriesByName === 'undefined')
+            return;
+        
+        var measure = window.performance.getEntriesByName(eventName)[0];
+        if (newRelic(measure))
+            return measure.duration + measure.startTime;
+        else
+            return 'N/A';
+    }
+
+    function init(viewersArr) {
+        //init debug box 
+        var ul = document.createElement('ul');
+        ul.id = 'debug_log';
+        ul.style.position = "absolute";
+        ul.style.bottom = "0"
+        ul.style.background = "#ccc";
+
+        for (var i = 0; i < viewersArr.length; i++) {
+
+            var exist = !(viewersArr[i].imagesArr && viewersArr[i].src + viewersArr[i].imagesArr[0] == viewersArr[i].callbackPic);
+
+            //first init
+            var li = document.createElement('li');
+            var span = document.createElement('span');
+            span.innerText = exist ? 'loading...' : 'not exist';
+            span.className = 'value';
+            li.id = viewersArr[i].id + '_' + viewersArr[i].element.data('type') + '_first_init';
+            li.innerHTML = viewersArr[i].id + '_' + viewersArr[i].element.data('type') + '_first_init : ' + span.outerHTML;
+            ul.appendChild(li);
+
+            //full init
+            var li2 = document.createElement('li');
+            var span = document.createElement('span');
+            span.innerText = exist ? 'loading...' : 'not exist';
+            span.className = 'value';
+            li2.id = viewersArr[i].id + '_' + viewersArr[i].element.data('type') + '_full_init';
+            li2.innerHTML = viewersArr[i].id + '_' + viewersArr[i].element.data('type') + '_full_init : ' + span.outerHTML;
+            ul.appendChild(li2);
+        }
+        document.body.appendChild(ul);
+
+         if (isDebugMode) $("#debug_log").show()
+         else $("#debug_log").hide();
+ 
+    } 
+
+    return {         
+        Measure: measure,
+        Mark: mark,
+        CalcAndWriteToLog: calcAndWriteToLog,
+        Init: init
+    }
+})(location.hash.indexOf("debug") == 1);  
+
+ 
+$(document).on("loadTemplate", function() {  
+    if(vm)
+        performanceManager.Init(vm.getViewers());
+}) 
+
+$(document).on("first_init_start", function(event, data) {    
+    performanceManager.Mark(data.Id + "_first_init_start");  
+
+})
+
+$(document).on("first_init_end", function(event, data) {
+    performanceManager.Mark(data.Id + "_first_init_end");
+    performanceManager.Measure(data.Id + "_first_init",data.Id + "_first_init_start",data.Id + "_first_init_end");
+    performanceManager.CalcAndWriteToLog(data.Id + "_first_init"); 
+})
+ 
+$(document).on("full_init_start", function(event, data) {
+    performanceManager.Mark(data.Id + "_full_init_start");     
+})
+
+$(document).on("full_init_end", function(event, data) { 
+    performanceManager.Mark(data.Id + "_full_init_end");
+    performanceManager.Measure(data.Id + "_full_init",data.Id + "_full_init_start",data.Id + "_full_init_end");
+    performanceManager.CalcAndWriteToLog(data.Id + "_full_init");
+}) 
 
 if (!window.location.origin) {
   window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
